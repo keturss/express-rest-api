@@ -1,6 +1,7 @@
 import { NextFunction, RequestHandler, Response } from 'express';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import Roles from '@/roles/roles';
+import { HttpException } from '@/exceptions/HttpException';
 
 const rolesmiddleware = (permittedRoles: Array<Roles>, me = false): RequestHandler => {
   return (req: RequestWithUser, res: Response, next: NextFunction) => {
@@ -9,7 +10,7 @@ const rolesmiddleware = (permittedRoles: Array<Roles>, me = false): RequestHandl
     if ((user && permittedRoles.includes(user.role)) || (me && user._id)) {
       next();
     } else {
-      res.status(403).json({ message: 'Forbidden for roles' });
+      next(new HttpException(403, 'Forbidden for roles'));
     }
   };
 };
