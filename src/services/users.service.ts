@@ -1,5 +1,5 @@
 import { hash } from 'bcrypt';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
@@ -34,7 +34,7 @@ class UserService {
     return createUserData;
   }
 
-  public async updateUser(userId: string, userData: CreateUserDto): Promise<User> {
+  public async updateUser(userId: string, userData: UpdateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     if (userData.email) {
@@ -47,7 +47,7 @@ class UserService {
       userData = { ...userData, password: hashedPassword };
     }
 
-    const updateUserById: User = await userModel.findByIdAndUpdate(userId, { userData });
+    const updateUserById: User = await userModel.findByIdAndUpdate(userId, userData);
     if (!updateUserById) throw new HttpException(409, "User doesn't exist");
 
     return updateUserById;
