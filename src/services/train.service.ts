@@ -2,10 +2,18 @@ import { HttpException } from '@exceptions/HttpException';
 import { isEmpty } from '@utils/util';
 import TrainModel from '@/models/train.model';
 import { Train } from '@/interfaces/train.interface';
-import { CreateTrainDto, UpdateTrainDto } from '@/dtos/train.dtos';
+import { CreateTrainDto, UpdateTrainDto } from '@/dtos/train.dto';
 
 class TrainService {
   public trains = TrainModel;
+
+  public async findTrainAll(asc: 1 | -1, sortBy: string | 'name' | 'start_stationId' | 'end_stationId', limit: number | 10): Promise<Train[]> {
+    const findTrain: Train[] = await TrainModel.find()
+      .sort({ [sortBy]: asc })
+      .limit(limit);
+    if (!findTrain) throw new HttpException(409, "Train doesn't exist");
+    return findTrain;
+  }
 
   public async findTrainById(trainId: string): Promise<Train> {
     if (isEmpty(trainId)) throw new HttpException(400, 'trainId is empty');
@@ -41,11 +49,17 @@ class TrainService {
     return updateTrainById;
   }
 
-  public async deleteTrain(trainId: string): Promise<Train> {
-    const deleteTrainById: Train = await TrainModel.findByIdAndDelete(trainId);
+  public async deleteTrain(trainId: string): Promise<Train[]> {
+    const deleteTrainById: Train[] = await TrainModel.findByIdAndDelete(trainId);
     if (!deleteTrainById) throw new HttpException(409, "Train doesn't exist");
 
     return deleteTrainById;
+  }
+
+  public async deleteTrainByStation(stationId: string): Promise<Train[]> {
+    const findTrain: Train[] = await TrainModel.find({ $or: [{ start_stationId: stationId }, { end_stationId: stationId }] });
+    const deleteTrainById = await TrainModel.deleteMany({ $or: [{ start_stationId: stationId }, { end_stationId: stationId }] });
+    return findTrain ? findTrain : [];
   }
 }
 

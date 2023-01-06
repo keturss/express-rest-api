@@ -1,0 +1,39 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All Station
+GET {{ baseURL }}/station
+
+###
+# Find station By Id
+GET {{ baseURL }}/station/63b858a34cbc7ff3fe266c13
+
+###
+# Create station
+POST {{ baseURL }}/station
+Content-Type: application/json
+
+{
+    "name": "Paris2",
+    "open_hour": "8h",
+    "close_hour": "18h",
+    "image": "image"
+}
+
+###
+# Modify station By Id
+PUT {{ baseURL }}/station/63b858a34cbc7ff3fe266c13
+Content-Type: application/json
+
+{
+    "name": "Berlin",
+    "open_hour": "8h",
+    "close_hour": "1h",
+    "image": "image"
+}
+
+###
+# Delete station By Id
+DELETE {{ baseURL }}/station/63b8708e2eb981d685c6786c
+

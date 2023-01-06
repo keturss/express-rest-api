@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import UsersController from '@controllers/users.controller';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import authMiddleware from '@middlewares/auth.middleware';
 import validationMiddleware from '@middlewares/validation.middleware';
@@ -17,12 +17,12 @@ class UsersRoute implements Routes {
   }
 
   private initializeRoutes() {
-    //this.router.get(`${this.path}`, authMiddleware, this.usersController.getUsers);
+    this.router.get(`${this.path}`, [authMiddleware, rolesmiddleware([Roles.ADMIN, Roles.STAFF])], this.usersController.getUsers);
     this.router.get(`${this.path}/:id`, [authMiddleware, rolesmiddleware([Roles.STAFF, Roles.ADMIN])], this.usersController.getUserById);
     this.router.post(`${this.path}`, validationMiddleware(CreateUserDto, 'body'), this.usersController.createUser);
     this.router.put(
       `${this.path}/:id`,
-      [authMiddleware, validationMiddleware(CreateUserDto, 'body'), rolesmiddleware([], true)],
+      [authMiddleware, validationMiddleware(UpdateUserDto, 'body'), rolesmiddleware([Roles.ADMIN], true)],
       this.usersController.updateUser,
     );
     this.router.delete(`${this.path}/:id`, [authMiddleware, rolesmiddleware([], true)], this.usersController.deleteUser);

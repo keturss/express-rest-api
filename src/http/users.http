@@ -7,28 +7,20 @@ GET {{ baseURL }}/users
 
 ###
 # Find User By Id
-GET {{ baseURL }}/users/1
+GET {{ baseURL }}/users/63b830b7392b8f3075f18860
 
-###
-# Create User
-POST {{ baseURL }}/users
-Content-Type: application/json
-
-{
-    "email": "example@email.com",
-    "password": "password"
-}
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/users/1
+PUT {{ baseURL }}/users/63b830b7392b8f3075f18860
 Content-Type: application/json
 
 {
-    "email": "example@email.com",
+    "pseudo": "test2",
+    "email": "aazezaeaa@email.com",
     "password": "password"
 }
 
 ###
 # Delete User By Id
-DELETE {{ baseURL }}/users/1
+DELETE {{ baseURL }}/users/63b83c688195a51aeca49a8c

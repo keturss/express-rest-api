@@ -1,10 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 import TrainService from '@/services/train.service';
 import { Train } from '@/interfaces/train.interface';
-import { CreateTrainDto, UpdateTrainDto } from '@/dtos/train.dtos';
+import { CreateTrainDto, UpdateTrainDto } from '@/dtos/train.dto';
 
 class TrainController {
   public trainService = new TrainService();
+
+  public getTrainAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const trainAsc = req.params.asc ? 1 : -1;
+      const trainCategorie: string = req.params.categorie;
+      const trainLimit: number = +req.params.limit;
+      const findOnetrainData: Train[] = await this.trainService.findTrainAll(trainAsc, trainCategorie, trainLimit);
+
+      res.status(200).json({ data: findOnetrainData, message: 'all' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   public getTrainById = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -43,7 +56,7 @@ class TrainController {
   public deleteTrain = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const trainId: string = req.params.id;
-      const deletetrainData: Train = await this.trainService.deleteTrain(trainId);
+      const deletetrainData: Train[] = await this.trainService.deleteTrain(trainId);
 
       res.status(200).json({ data: deletetrainData, message: 'deleted' });
     } catch (error) {

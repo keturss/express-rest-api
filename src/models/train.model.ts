@@ -6,10 +6,10 @@ class Train {
   public name: string;
 
   @prop({ type: String, required: true })
-  public start_station: string;
+  public start_stationId: string;
 
   @prop({ type: String, required: true })
-  public end_station: string;
+  public end_stationId: string;
 
   @prop({ type: String, required: true })
   public time_of_departure: string;

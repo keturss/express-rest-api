@@ -2,8 +2,9 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import App from '@app';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import UsersRoute from '@routes/users.route';
+import Roles from '@/roles/roles';
 
 afterAll(async () => {
   await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
@@ -17,30 +18,33 @@ describe('Testing Users', () => {
 
       users.find = jest.fn().mockReturnValue([
         {
-          _id: 'qpwoeiruty',
+          pseudo: 'alskdazejfhg',
           email: 'a@email.com',
           password: await bcrypt.hash('q1w2e3r4!', 10),
+          role: Roles.ADMIN,
         },
         {
-          _id: 'alskdjfhg',
+          pseudo: 'alskdjfhg',
           email: 'b@email.com',
           password: await bcrypt.hash('a1s2d3f4!', 10),
+          role: Roles.STAFF,
         },
         {
-          _id: 'zmxncbv',
+          pseudo: 'zmxncbv',
           email: 'c@email.com',
           password: await bcrypt.hash('z1x2c3v4!', 10),
+          role: Roles.UNKNOWN,
         },
       ]);
 
       (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
-      return request(app.getServer()).get(`${usersRoute.path}`).expect(200);
+      return request(app.getServer()).get(`${usersRoute.path}`).expect(404); // NOT auth
     });
   });
 
   describe('[GET] /users/:id', () => {
-    it('response findOne User', async () => {
+    it('response findOne User Role: Admin withoud auth', async () => {
       const userId = 'qpwoeiruty';
 
       const usersRoute = new UsersRoute();
@@ -50,11 +54,12 @@ describe('Testing Users', () => {
         _id: 'qpwoeiruty',
         email: 'a@email.com',
         password: await bcrypt.hash('q1w2e3r4!', 10),
+        role: Roles.ADMIN,
       });
 
       (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
-      return request(app.getServer()).get(`${usersRoute.path}/${userId}`).expect(200);
+      return request(app.getServer()).get(`${usersRoute.path}/${userId}`).expect(404); // NOT auth
     });
   });
 
@@ -63,6 +68,8 @@ describe('Testing Users', () => {
       const userData: CreateUserDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4',
+        pseudo: 'keturss',
+        role: 'ADMIN',
       };
 
       const usersRoute = new UsersRoute();
@@ -82,11 +89,14 @@ describe('Testing Users', () => {
   });
 
   describe('[PUT] /users/:id', () => {
-    it('response Update User', async () => {
+    it('response Update User Me With Token role', async () => {
       const userId = '60706478aad6c9ad19a31c84';
-      const userData: CreateUserDto = {
+      const userData: UpdateUserDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4',
+        id: '60706478aad6c9ad19a31c84',
+        pseudo: '',
+        role: '',
       };
 
       const usersRoute = new UsersRoute();
@@ -113,7 +123,7 @@ describe('Testing Users', () => {
   });
 
   describe('[DELETE] /users/:id', () => {
-    it('response Delete User', async () => {
+    it('response Delete User Me Without Token', async () => {
       const userId = '60706478aad6c9ad19a31c84';
 
       const usersRoute = new UsersRoute();
@@ -127,7 +137,7 @@ describe('Testing Users', () => {
 
       (mongoose as any).connect = jest.fn();
       const app = new App([usersRoute]);
-      return request(app.getServer()).delete(`${usersRoute.path}/${userId}`).expect(200);
+      return request(app.getServer()).delete(`${usersRoute.path}/${userId}`).expect(404); // NOT auth
     });
   });
 });

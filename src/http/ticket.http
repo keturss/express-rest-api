@@ -1,0 +1,35 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All Ticket
+GET {{ baseURL }}/ticket
+
+###
+# Find User By Id
+GET {{ baseURL }}/ticket/63b840ce2f780050bcafece9
+
+###
+# Create Ticket
+POST {{ baseURL }}/ticket
+Content-Type: application/json
+
+{
+    "name": "keturss",
+    "trainId": "63b8709c2eb981d685c67872"
+}
+
+###
+# Modify User By Id
+PUT {{ baseURL }}/ticket/63986ea0da69263588e51ccd
+Content-Type: application/json
+
+{
+    "pseudo": "test2",
+    "email": "aazezaeaa@email.com",
+    "password": "password"
+}
+
+###
+# Delete User By Id
+DELETE {{ baseURL }}/ticket/63b87003bdf9d8afff9d0482

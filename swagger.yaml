@@ -1,121 +1,417 @@
-openapi: 3.0.3
-tags:
-- name: users
-  description: users API
+openapi: 3.0.0
+info:
+  version: "1"
+  title: RAILROAD
+  description: |-
+    RailRoad ltd est une entreprise qui vise à produire la meilleure expérience pour vos déplacements locaux et nationaux. Cette application vous permettra de pouvoir réserver un billet de train afin de vous déplacer où vous souhaiter et vous permettra de consulter à n'importe quel moment les trains en services ainsi que les gares ouvertes.
+        Les Identifiants seront visibles lors du READ de l'entité désirée 
 
 paths:
-# [GET] users
+  /train/{id}:
+    put:
+      tags:
+        - Train
+      description: Mettre à jour un train existant grâce à son ID
+      requestBody:
+        description: Mettre à jour un train existant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Train'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Train'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Train'
+        required: true
+      responses:
+        '200':
+          description: Train modifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Train'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Train'
+        '400':
+          description: Id du train invalide
+        '404':
+          description: Train non trouvé
+        '405':
+          description: Validation exception
+
+  /train/:
+    post:
+      tags:
+        - Train
+      description: Créer un train
+      requestBody:
+        description: Créer un train
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Train'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Train'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Train'
+        required: true
+      responses:
+        '200':
+          description: Train créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Train'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Train'
+        '405':
+          description: Entrée invalide
+
+  /train/{idTodelete}:
+    delete:
+      tags:
+        - Train
+      description: Suprimer un train existant grâce à son ID
+      parameters:
+        - name: trainID
+          in: path
+          description: Train id à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Valeur de l'ID invalide
+
+  /train/{asc}/{categorie}/{limit}:
+    get:
+      tags:
+        - Train
+      description: Visualiser les différents trains existants 
+      responses:
+        '200':
+          description: all
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Train'  
+
+
+  /users/{id}:
+    put:
+      tags:
+        - Users
+      description: Mettre à jour un utilisateur existant grâce à son ID
+      requestBody:
+        description: Mettre à jour un utilisateur existant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: User modifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Id du User invalide
+        '404':
+          description: User non trouvé
+        '405':
+          description: Validation exception
+
+  /users/:
+    post:
+      tags:
+        - Users
+      description: Créer un utilisateur
+      requestBody:
+        description: Créer un utilisateur
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Utilisateur créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '405':
+          description: Entrée invalide
+
+  /users/{idToDelete}:
+    delete:
+      tags:
+        - Users
+      description: Suprimer un utilisateur existant grâce à son ID
+      parameters:
+        - name: UserID
+          in: path
+          description: User id à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Valeur de l'ID invalide
+
   /users:
     get:
       tags:
-      - users
-      summary: Find All Users
+        - Users
+      description: Visualiser les différents utilisateurs existants 
       responses:
-        200:
-          description: 'OK'
-        500:
-          description: 'Server Error'
+        '200':
+          description: Utilisateur créé
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'          
 
-# [POST] users
-    post:
-      tags:
-      - users
-      summary: Add User
-      parameters:
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
-      responses:
-        201:
-          description: 'Created'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
 
-# [GET] users/id
-  /users/{id}:
-    get:
-      tags:
-      - users
-      summary: Find User By Id
-      parameters:
-      - name: id
-        in: path
-        description: User Id
-        required: true
-      responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [PUT] users/id
+  /station/{id}:
     put:
       tags:
-      - users
-      summary: Update User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
+        - Station
+      description: Mettre à jour une Gare existante grâce à son ID
+      requestBody:
+        description: Mettre à jour une Gare existante
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Station'
         required: true
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
       responses:
-        200:
-          description: 'OK'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
+        '200':
+          description: Station modifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+        '400':
+          description: Id de la Station invalide
+        '404':
+          description: Station non trouvé
+        '405':
+          description: Validation exception
 
-# [DELETE] users/id
+  /station:
+    post:
+      tags:
+        - Station
+      description: Créer une Station
+      requestBody:
+        description: Créer une Station
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Station'
+        required: true
+      responses:
+        '200':
+          description: Station créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+        '405':
+          description: Entrée invalide
+
+  /station/{idToDelete}:
     delete:
       tags:
-      - users
-      summary: Delete User By Id
+        - Station
+      description: Suprimer une gare existante grâce à son ID
       parameters:
-      - name: id
-        in: path
-        description: user Id
+        - name: id
+          in: path
+          description: ID de la gare a supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Valeur Gare invalide
+
+  /station/:
+    get:
+      tags:
+        - Station
+      description: Visualiser les différentes gares existantes
+      responses:
+        '200':
+          description: Opération effectuée avec succès
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Station'
+
+  /ticket:
+    post:
+      tags:
+        - Ticket
+      description: Créer un Ticket
+      requestBody:
+        description: Créer un Ticket
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
         required: true
       responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
+        '200':
+          description: Ticket créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+        '405':
+          description: Entrée invalide
 
-# definitions
-definitions:
-  users:
-    type: object
-    required:
+  /ticket/{idToDelete}:
+    delete:
+      tags:
+        - Ticket
+      description: Suprimer un ticket existante grâce à son ID
+      parameters:
+        - name: id
+          in: path
+          description: ID du ticket a supprimer
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Id ticket invalide
+
+  /ticket/:
+    get:
+      tags:
+        - Ticket
+      description: Visualiser les différents tickets existantes 
+      responses:
+        '200':
+          description: Opération effectuée avec succès
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Ticket'
+
+
+components:
+  schemas:
+    User:
+      required:
         - email
+        - pseudo
         - password
-    properties:
-      email:
-        type: string
-        description: user Email
-      password:
-        type: string
-        description: user Password
+        - role
+      type: object
+      properties:
+        email:
+          type: string
+          example: admin@admin.com
+        pseudo:
+          type: string
+          example: 'administrateur2'
+        password:
+          type: string
+          example: '12azekjbpxuçâu5'
+        role: 
+          type: string
+          example: 'ADMIN'
+            
 
-schemes:
- - https
- - http
+
+    Train:
+      required:
+        - name
+        - start_stationid
+        - end_stationid
+        - time_of_departure
+      type: object
+      properties:
+        name:
+          type: string
+          example: tchoutchou
+        start_stationId:
+          type: string
+          example: 2azesniazeyb
+        end_stationId:
+          type: string
+          example: 6azenxpoiywhbauz
+        time_of_departure: 
+          type: string
+          example: 17h23
+ 
+
+    Station:
+      required:
+        - name
+        - open_hour
+        - close_hour
+        - image
+      type: object
+      properties:
+        name:
+          type: string
+          example: Gare du Nord
+        open_hour:
+          type: string
+          example: 9h
+        close_hour:
+          type: string
+          example: 22h
+        image: 
+          type: string
+          example: BinaryImage
+
+    Ticket:
+      required:
+        - name
+        - trainId
+      type: object
+      properties:
+        name:
+          type: string
+          example: TGV
+        open_hour:
+          type: string
+          example: 9ajhs!çaaze

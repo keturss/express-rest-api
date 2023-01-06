@@ -1,0 +1,38 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All train
+GET {{ baseURL }}/train/1/name/10
+
+###
+# Find train By Id
+GET {{ baseURL }}/train/1
+
+###
+# Create train
+POST {{ baseURL }}/train
+Content-Type: application/json
+
+{
+    "name": "keturss_Trai2n2azeaze",
+    "start_stationId": "63b86fabbdf9d8afff9d046a",
+    "end_stationId": "63b8708e2eb981d685c6786c",
+    "time_of_departure": "2020-06-15"
+}
+
+###
+# Modify train By Id
+PUT {{ baseURL }}/train/63b8408c2f780050bcafecde
+Content-Type: application/json
+
+{
+    "name": "keturss_Train2",
+    "start_station": "Berlin",
+    "end_station": "Amsterdam",
+    "time_of_departure": "2023-06-15"
+}
+
+###
+# Delete train By Id
+DELETE {{ baseURL }}/train/63b85e6aad351a6d5f006553
