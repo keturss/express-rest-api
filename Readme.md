@@ -107,7 +107,12 @@ MONGODB_URL=mongodb://127.0.0.1:27017/expressApi
 ```
 src\
  |--config\         # Environment variables and configuration
- |--controllers\    # Route controllers (controller layer)
+ |--controllers\    # Route controllers (controller layer) 
+ |--databases\      # Connection mongodb 
+ |--dtos\           # Data transfer object 
+ |--exceptions\     # HTTP Exception 
+ |--http\           # Request HTTP ( Postman alternative)
+ |--interfaces\     # Request data validation schemas
  |--middlewares\    # Custom express middlewares
  |--models\         # Mongoose models (data layer)
  |--routes\         # Routes
